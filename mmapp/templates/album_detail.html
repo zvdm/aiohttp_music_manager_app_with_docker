@@ -1,0 +1,41 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+    <h2>Albums of user: {{ user }}</h2>
+    <br><br>
+
+    <a href="#all_tracks" data-toggle="collapse"><u>Create new album</u></a><br>
+    <div id="all_tracks" class="collapse">
+        <form method="post" action="/albums" enctype="application/x-www-form-urlencoded">
+        {% if tracks %}
+            <input id="title" name="title" type="text" placeholder="new album title" required><br>
+            {% for track in tracks %}
+            <label style="font-size:18px">{{ track.title }}
+                <input id="{{ track.id }}" type="checkbox" name="checked" value="{{ track.title }}">
+            </label><br>
+            {% endfor %}
+            <button type="submit">Create album</button>
+        {% else %}
+            <p>There are no one track.</p>
+        {% endif %}
+        </form>
+    </div>
+
+    <br><br>
+    <div style="margin-left:20px; margin-top:20px">
+        {% if albums %}
+            {% for album in albums %}
+                <a href="/album/{{ album.title }}">{{ album.title }}</a>
+                <form method="post" action="/albums" enctype="application/x-www-form-urlencoded">
+                    <input style="background:white; color:black; border: 0" name="delete" type="text" value="{{ album.id }}" hidden>
+                    <button type="submit">Delete album</button>
+                </form>
+                <br>
+            {% endfor %}
+        {% else %}
+            <p>There are no one album.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+    <form method="post" action="/track/{{ title }}" enctype="application/x-www-form-urlencoded">
+        <h2>Track: <input style="background:white; color:black; border: 0" id="title" name="title" type="text" value="{{ title }}" disabled required></h2>
+        <button id="change_button" type="button" >Change title</button>
+        <button id="send_button" type="submit" hidden>Send new title</button>
+        <button id="cancel" type="button" hidden>cancel</button>
+    </form>
+
+    <br><br>
+    <div style="margin-left:20px; margin-top:20px">
+        {% if albums %}
+
+            <p style="font-size:20px">This track contains in next albums: <a href="/album/{{ albums.title }}">{{ albums.title }}</a></p>
+
+        {% else %}
+            <p>There are no one albums, which contains this track.</p>
+        {% endif %}
+    </div>
+
+    <script>
+    function enableField() {
+        document.getElementById("title").disabled = false;
+        document.getElementById("title").style="background:white; color:black; border: 1";
+        document.getElementById("change_button").hidden = true;
+        document.getElementById("send_button").hidden = false;
+        document.getElementById("cancel").hidden = false;
+    }
+    document.getElementById("change_button").addEventListener("click", enableField);
+
+    function disableField() {
+        document.getElementById("title").disabled = true;
+        document.getElementById("title").style="background:white; color:black; border: 0";
+        document.getElementById("change_button").hidden = false;
+        document.getElementById("send_button").hidden = true;
+        document.getElementById("cancel").hidden = true;
+    }
+    document.getElementById("cancel").addEventListener("click", disableField);
+    </script>
+
+{% endblock %}

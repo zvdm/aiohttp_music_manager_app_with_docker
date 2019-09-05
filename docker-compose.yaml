@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  aiohttp:
+    build: .
+    command: gunicorn entry:crapp --bind aiohttp:8080 --worker-class aiohttp.GunicornWebWorker
+    volumes:
+      - .:/aiohttp
+    networks:
+      - nginx_network
+      - mmappdb_network # <-- connect to the bridge
+    depends_on:  # <-- wait for db to be "ready" before starting the app
+      - mmappdb
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 80:80
+    links:
+      - aiohttp:aiohttp
+    volumes:
+      - ./config/nginx/conf.d/nginx.conf:/etc/nginx/sites-enabled/
+    depends_on:
+      - aiohttp
+    networks:
+      - nginx_network
+
+  mmappdb:  # <-- IMPORTANT: same name as in DATABASES setting
+    image: postgres:10
+    env_file:  # <-- we use the previously defined values
+      - config/db/database_env
+    networks:  # <-- connect to the bridge
+      - mmappdb_network
+    volumes:
+      - mmappdb_volume:/var/lib/postgresql/data
+
+networks:
+  nginx_network:
+    driver: bridge
+  mmappdb_network:  # <-- add the bridge
+    driver: bridge
+
+volumes:
+  mmappdb_volume:

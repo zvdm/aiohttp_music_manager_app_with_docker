@@ -1,0 +1,65 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+    <form method="post" action="/album/{{ title }}" enctype="application/x-www-form-urlencoded">
+        <h2>Album: <input style="background:white; color:black; border: 0" id="title" name="title" type="text" value="{{ title }}" disabled required></h2>
+        <button id="change_button" type="button" >Change title</button>
+        <button id="send_button" type="submit" hidden>Send new title</button>
+        <button id="cancel" type="button" hidden>cancel</button>
+    </form>
+
+    <br><br>
+
+    {% if tracks_in_album %}
+        {% for track in tracks_in_album %}
+            <a href="/track/{{ track.title }}">{{ track.title }}</a>
+            <form method="post" action="/album/{{ title }}" enctype="application/x-www-form-urlencoded">
+                <input style="background:white; color:black; border: 0" name="delete" type="text" value="{{ track.id }}" hidden>
+                <button type="submit">Delete track from album</button>
+            </form>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p>There are no one track in this album.</p>
+    {% endif %}
+
+    <br><br>
+
+    <a href="#all_tracks" data-toggle="collapse"><u>Add another tracks to this album</u></a><br>
+    <div id="all_tracks" class="collapse">
+        <form method="post" action="/album/{{ title }}" enctype="application/x-www-form-urlencoded">
+        {% if tracks_not_in_album %}
+            {% for track in tracks_not_in_album %}
+            <label style="font-size:18px">{{ track.title }}
+                <input id="{{ track.id }}" type="checkbox" name="checked" value="{{ track.title }}">
+            </label><br>
+            {% endfor %}
+            <button type="submit">Add to album</button>
+        {% else %}
+            <p>There are no one track.</p>
+        {% endif %}
+        </form>
+    </div>
+
+    <script>
+    function enableField() {
+        document.getElementById("title").disabled = false;
+        document.getElementById("title").style="background:white; color:black; border: 1";
+        document.getElementById("change_button").hidden = true;
+        document.getElementById("send_button").hidden = false;
+        document.getElementById("cancel").hidden = false;
+    }
+    document.getElementById("change_button").addEventListener("click", enableField);
+
+    function disableField() {
+        document.getElementById("title").disabled = true;
+        document.getElementById("title").style="background:white; color:black; border: 0";
+        document.getElementById("change_button").hidden = false;
+        document.getElementById("send_button").hidden = true;
+        document.getElementById("cancel").hidden = true;
+    }
+    document.getElementById("cancel").addEventListener("click", disableField);
+    </script>
+
+{% endblock %}

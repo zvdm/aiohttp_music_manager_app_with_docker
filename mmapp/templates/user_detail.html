@@ -1,0 +1,81 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <form method="post" action="/user" enctype="application/x-www-form-urlencoded">
+        <h2>User: <input style="background:white; color:black; border: 0" id="username" name="name" type="text" value="{{ user.info.name }}" disabled required></h2>
+        <h6 style="font-size:18px">New password: <input style="background:white; color:black; border: 0" id="password" name="pwd" type="text" placeholder="input new password" disabled hidden></h6>
+        <h6 style="font-size:18px">email: <input style="background:white; color:black; border: 0" id="email" name="email" type="email" value="{% if user.info.email %}{{ user.info.email }}{% endif %}" disabled></h6>
+        <h6 style="font-size:18px">Age: <input style="background:white; color:black; border: 0" id="age" name="age" type="text" value="{% if user.info.age %}{{ user.info.age }}{% endif %}" disabled></h6>
+        <h6 style="font-size:18px">Location: <input style="background:white; color:black; border: 0" id="location" name="location" type="text" value="{% if user.info.location %}{{ user.info.location }}{% endif %}" disabled></h6>
+        <button id="change_button" type="button" >Change info</button>
+        <button id="send_button" type="submit" hidden>Send new info</button>
+        <button id="cancel" type="button" hidden>cancel</button>
+    </form>
+    <br><br>
+
+    <form method="post" action="/user" enctype="application/x-www-form-urlencoded">
+        <input style="background:white; color:black; border: 0" name="delete" type="text" value="delete user" hidden>
+        <button type="submit">Delete user</button>
+    </form>
+
+    <div style="margin-left:20px; margin-top:20px">
+        <h4>Albums</h4>
+        {% if user.albums %}
+            {% for album in user.albums %}
+                <a href="/album/{{ album.title }}">{{ album.title }}</a>
+            {% endfor %}
+        {% else %}
+            <p>There are no one album.</p>
+        {% endif %}
+    </div>
+
+    <div style="margin-left:20px; margin-top:20px">
+        <h4>Tracks</h4>
+        {% if user.tracks %}
+            {% for track in user.tracks %}
+                <a href="/track/{{ track.title }}">{{ track.title }}</a><br>
+            {% endfor %}
+        {% else %}
+            <p>There are no one track.</p>
+        {% endif %}
+    </div>
+
+    <script>
+    function enableField() {
+        document.getElementById("username").disabled = false;
+        document.getElementById("username").style="background:white; color:black; border: 1";
+        document.getElementById("password").disabled = false;
+        document.getElementById("password").hidden = false;
+        document.getElementById("password").style="background:white; color:black; border: 1";
+        document.getElementById("email").disabled = false;
+        document.getElementById("email").style="background:white; color:black; border: 1";
+        document.getElementById("age").disabled = false;
+        document.getElementById("age").style="background:white; color:black; border: 1";
+        document.getElementById("location").disabled = false;
+        document.getElementById("location").style="background:white; color:black; border: 1";
+        document.getElementById("change_button").hidden = true;
+        document.getElementById("send_button").hidden = false;
+        document.getElementById("cancel").hidden = false;
+    }
+    document.getElementById("change_button").addEventListener("click", enableField);
+
+    function disableField() {
+        document.getElementById("username").disabled = true;
+        document.getElementById("username").style="background:white; color:black; border: 0";
+        document.getElementById("password").disabled = true;
+        document.getElementById("password").hidden = true;
+        document.getElementById("password").style="background:white; color:black; border: 0";
+        document.getElementById("email").disabled = true;
+        document.getElementById("email").style="background:white; color:black; border: 0";
+        document.getElementById("age").disabled = true;
+        document.getElementById("age").style="background:white; color:black; border: 0";
+        document.getElementById("location").disabled = true;
+        document.getElementById("location").style="background:white; color:black; border: 0";
+        document.getElementById("change_button").hidden = false;
+        document.getElementById("send_button").hidden = true;
+        document.getElementById("cancel").hidden = true;
+    }
+    document.getElementById("cancel").addEventListener("click", disableField);
+    </script>
+
+{% endblock %}

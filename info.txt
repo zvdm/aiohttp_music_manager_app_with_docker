@@ -1,0 +1,1 @@
+Need run docker or docker-compose on server as daemon and copy nginx.conf in /etc/nginx/sites-enabled/
